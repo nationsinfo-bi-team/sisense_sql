@@ -6,17 +6,19 @@ SELECT DISTINCT Daykey,
                 id_order AS Cascades,
                 static_1st_bill,
                 i.flag_invoice_Datequal,
-                (CASE
-                     WHEN binb.level='PREPAID'
-                          OR binb.level LIKE '%GIFT%' THEN 'PREPAID'
-                     WHEN binb.type='CHARGE CARD'
-                          AND binb.level <> 'PREPAID' THEN 'CREDIT'
-                     WHEN binb.type='CREDIT'
-                          AND binb.level <> 'PREPAID' THEN 'CREDIT'
-                     WHEN binb.type='DEBIT'
-                          AND binb.level <> 'PREPAID' THEN 'DEBIT'
-                     ELSE 'OTHER'
-                 END) AS CPD
+                ( CASE
+                   WHEN ((binb.level LIKE '%PREPAID%')
+                         AND ((binb.level='PREPAID RELOADABLE')
+                              OR (binb.level='RELOADABLE PREPAID'))) THEN 'PREPAID_R'
+                   WHEN ((binb.level LIKE '%PREPAID%')
+                         AND ((binb.level!='PREPAID RELOADABLE')
+                              OR (binb.level!='RELOADABLE PREPAID'))) THEN 'PREPAID'
+                   WHEN ((binb.level LIKE '%GIFT%')) THEN 'PREPAID'
+                   WHEN (binb.type IN ('CHARGE CARD',
+                                           'CREDIT')) THEN 'CREDIT'
+                   WHEN (binb.type = 'DEBIT') THEN 'DEBIT'
+                   ELSE 'OTHER'
+                END) AS CPD
 FROM [nic_common.view_invoice_item] i join  [nic_common.view_dimension_alpha] dimension ON i.id_ad =dimension.ad_id
 AND signup_type IN ('initial_immediate',
                     'initial_recurring',
