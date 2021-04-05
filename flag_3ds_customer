@@ -1,0 +1,4 @@
+CASE 
+WHEN lookup([sisense_import.mpi_stats],authentication,[id_customer],id_customer)='A' or lookup([sisense_import.mpi_stats],authentication,[id_customer],id_customer)='Y'THEN 1
+ELSE 0
+end
