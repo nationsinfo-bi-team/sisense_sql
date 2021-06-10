@@ -1,9 +1,18 @@
+#Flag_FCL_RE_Customer_id
+
 CASE 
 	WHEN LOGIN_NAME IN (lookup([view_fcl_rep_customer], login_name, LOGIN_NAME,login_name)) AND 
 	(
 	CUSTOMER_ID IN (lookup([view_fcl_rep_customer], customer_id_fcl, CUSTOMER_ID,customer_id_fcl)) OR 
 	CUSTOMER_ID IN (lookup([view_fcl_rep_customer], customer_id_rep, CUSTOMER_ID,customer_id_rep))
 	)
+	THEN 1 
+ELSE 0
+END
+
+# Flag_RE_Credco_Person
+CASE 
+	WHEN LOGIN_NAME IN (lookup([view_re_credco_customer], login_name, LOGIN_NAME,login_name))
 	THEN 1 
 ELSE 0
 END
